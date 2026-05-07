@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="version" content="1774709534" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>Luoshu Birthday Energy Calculator v1774709534</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: #FFF;
+        color: #434343;
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: #d9d9d9;
+        border-bottom: 1px solid #999;
+        padding: 1rem;
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
+
+      header h1 {
+        max-width: 1280px;
+        margin: 0 auto;
+        font-size: 1.875rem;
+        font-weight: bold;
+        color: #434343;
+      }
+
+      main {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+
+      .card {
+        background-color: #FFF;
+        border: 1px solid #d9d9d9;
+        border-radius: 0.5rem;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .form-field {
+        display: flex;
+        flex-direction: column;
+      }
+
+      label {
+        color: #434343;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+      }
+
+      input[type="date"] {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px solid #d9d9d9;
+        border-radius: 0.5rem;
+        background-color: #FFF;
+        color: #434343;
+        font-size: 1rem;
+      }
+
+      input[type="date"]:focus {
+        outline: none;
+        border-color: #666;
+        box-shadow: 0 0 0 3px rgba(102, 102, 102, 0.1);
+      }
+
+      .hint {
+        color: #999;
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 1rem;
+      }
+
+      button {
+        flex: 1;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 0.5rem;
+        background-color: #666;
+        color: #FFF;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      }
+
+      button:hover {
+        background-color: #434343;
+      }
+
+      button:disabled {
+        background-color: #999;
+        cursor: not-allowed;
+      }
+
+      .page {
+        display: none;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      .page-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #434343;
+        margin-bottom: 1.5rem;
+      }
+
+      .page-subtitle {
+        color: #999;
+        font-size: 0.875rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Luoshu Grid Styles */
+      .luoshu-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+        margin: 2rem 0;
+        max-width: 400px;
+      }
+
+      .luoshu-cell {
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid #d9d9d9;
+        border-radius: 0.5rem;
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #434343;
+        background-color: #FFF;
+      }
+
+      .luoshu-cell.empty {
+        border-style: dashed;
+        color: #999;
+      }
+
+      /* Number Information Styles */
+      .number-info {
+        margin-bottom: 2rem;
+        padding: 1rem;
+        background-color: #FFF;
+        border-left: 4px solid #666;
+      }
+
+      .number-label {
+        font-size: 0.875rem;
+        color: #999;
+        margin-bottom: 0.5rem;
+      }
+
+      .number-value {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #434343;
+        margin-bottom: 0.5rem;
+      }
+
+      .element-info {
+        display: flex;
+        gap: 2rem;
+        margin-top: 0.5rem;
+      }
+
+      .element-item {
+        font-size: 0.875rem;
+      }
+
+      .element-label {
+        color: #999;
+        margin-right: 0.25rem;
+      }
+
+      .element-value {
+        color: #434343;
+        font-weight: 500;
+      }
+
+      /* List Styles */
+      .list-item {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background-color: #FFF;
+        border-left: 3px solid #d9d9d9;
+      }
+
+      .list-item-number {
+        font-weight: bold;
+        color: #434343;
+        margin-right: 0.5rem;
+      }
+
+      .list-item-text {
+        color: #666;
+      }
+
+      /* Page Navigation */
+      .page-nav {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .page-nav button {
+        flex: 0 1 auto;
+      }
+
+      .page-indicator {
+        text-align: center;
+        color: #999;
+        font-size: 0.875rem;
+        margin-top: 1rem;
+      }
+
+      /* Enhancement Number Section */
+      .enhancement-section {
+        margin-bottom: 2rem;
+      }
+
+      .enhancement-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #434343;
+        margin-bottom: 1rem;
+        border-bottom: 2px solid #d9d9d9;
+        padding-bottom: 0.5rem;
+      }
+
+      .color-info {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background-color: #FFF;
+      }
+
+      .color-name {
+        font-weight: bold;
+        color: #434343;
+        margin-bottom: 0.5rem;
+      }
+
+      .action-list {
+        list-style: none;
+        margin-left: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .action-list li {
+        margin-bottom: 0.5rem;
+        color: #666;
+        font-size: 0.875rem;
+      }
+
+      .action-list li:before {
+        content: "• ";
+        color: #999;
+        margin-right: 0.5rem;
+      }
+
+      .calculation-method {
+        background-color: #FFF;
+        border: 1px solid #d9d9d9;
+        padding: 1rem;
+        border-radius: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.875rem;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Luoshu Birthday Energy Calculator</h1>
+    </header>
+
+    <main>
+      <!-- Input Page -->
+      <div id="inputPage" class="card active">
+        <div class="form-group">
+          <div class="form-field">
+            <label for="dateInput">Your Birthday</label>
+            <div style="display: flex; gap: 0.5rem;">
+              <input type="number" id="yearInput" placeholder="YYYY" min="1900" max="2100" style="width: 30%; padding: 0.5rem 1rem; border: 1px solid #d9d9d9; border-radius: 0.5rem;" />
+              <input type="number" id="monthInput" placeholder="MM" min="1" max="12" style="width: 20%; padding: 0.5rem 1rem; border: 1px solid #d9d9d9; border-radius: 0.5rem;" />
+              <input type="number" id="dayInput" placeholder="DD" min="1" max="31" style="width: 20%; padding: 0.5rem 1rem; border: 1px solid #d9d9d9; border-radius: 0.5rem;" />
+            </div>
+            <input type="date" id="dateInput" style="display: none;" />
+            <div class="hint">Enter Year, Month, Day separately</div>
+          </div>
+        </div>
+        <div class="button-group">
+          <button id="calculateBtn">Calculate</button>
+          <button id="resetBtn">Reset</button>
+        </div>
+      </div>
+
+      <!-- Page 1: Your Birthday Energy Analysis -->
+      <div id="page1" class="page card">
+        <div class="page-title">Your Birthday Energy Analysis</div>
+        <div class="page-subtitle">Zodiac Sign</div>
+        <div id="page1-zodiac" class="number-value" style="margin-bottom: 1.5rem;"></div>
+
+        <div class="calculation-method" id="page1-calculation"></div>
+
+        <div class="page-subtitle">Life Path Number</div>
+        <div id="page1-lifePathNumber" class="number-value" style="margin-bottom: 1.5rem;"></div>
+
+        <div id="page1-elements" style="margin-bottom: 1.5rem;"></div>
+
+        <div class="page-subtitle">Numbers You Can Enhance</div>
+        <div id="page1-enhanceNumbers" style="margin-bottom: 1.5rem;"></div>
+
+        <div class="page-subtitle">Colors You Can Enhance</div>
+        <div id="page1-enhanceColors"></div>
+
+        <div class="page-nav">
+          <button id="page1SaveBtn" style="background-color: #666; color: #FFF;">Save Results</button>
+          <button id="page1NextBtn">Next Page →</button>
+        </div>
+        <div class="page-indicator"><span id="page1-indicator">1/4</span></div>
+      </div>
+
+      <!-- Page 2: Luoshu Nine Palace -->
+      <div id="page2" class="page card">
+        <div class="page-title">Luoshu Nine Palace</div>
+        <div id="luoshuGrid" class="luoshu-grid"></div>
+
+        <div class="page-nav">
+          <button id="page2PrevBtn">← Previous Page</button>
+          <button id="page2NextBtn">Next Page →</button>
+        </div>
+        <div class="page-indicator"><span id="page2-indicator">2/4</span></div>
+      </div>
+
+      <!-- Page 3: Your Talents and Gifts -->
+      <div id="page3" class="page card">
+        <div class="page-title">Your Talents and Gifts</div>
+        <div class="page-subtitle">The following are the innate and talent numbers analyzed from your birth date.</div>
+
+        <div style="margin-bottom: 2rem;">
+          <div class="page-subtitle" style="margin-bottom: 1rem;">Innate Numbers</div>
+          <div id="page3-innateNumbers"></div>
+        </div>
+
+        <div>
+          <div class="page-subtitle" style="margin-bottom: 1rem;">Talent Numbers</div>
+          <div id="page3-talentNumbers"></div>
+        </div>
+
+        <div class="page-nav">
+          <button id="page3PrevBtn">← Previous Page</button>
+          <button id="page3NextBtn">Next Page →</button>
+        </div>
+        <div class="page-indicator"><span id="page3-indicator">3/4</span></div>
+      </div>
+
+      <!-- Page 4: Enhancement Numbers -->
+      <div id="page4" class="page card">
+        <div class="page-title">Enhancement Numbers</div>
+        
+        <div id="page4-enhancements"></div>
+
+        <div class="page-nav">
+          <button id="page4PrevBtn">← Previous Page</button>
+          <button id="page4ResetBtn">Calculate Again</button>
+        </div>
+        <div class="page-indicator"><span id="page4-indicator">4/4</span></div>
+      </div>
+    </main>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+      // Set date input placeholder to English format
+      const dateInput = document.getElementById('dateInput');
+      if (dateInput) {
+        dateInput.placeholder = 'YYYY-MM-DD';
+      }
+      // Number Color Element Mapping
+      const numberData = {
+        0: { mainColor: 'Platinum', mainElement: 'All Elements', auxElement: '', secondaryColorNum: null, secondaryColor: 'Colorless' },
+        1: { mainColor: 'Red', mainElement: 'Fire', auxElement: 'Metal', secondaryColorNum: 9, secondaryColor: 'Champagne Gold' },
+        2: { mainColor: 'Orange', mainElement: 'Water', auxElement: 'Earth', secondaryColorNum: 3, secondaryColor: 'Lemon Yellow' },
+        3: { mainColor: 'Yellow', mainElement: 'Wood', auxElement: 'Fire', secondaryColorNum: 9, secondaryColor: 'Antique Gold' },
+        4: { mainColor: 'Green Light', mainElement: 'Wood', auxElement: 'Earth', secondaryColorNum: 8, secondaryColor: 'Purple Gold' },
+        5: { mainColor: 'Glacier Blue', mainElement: 'Earth', auxElement: 'Fire/Wood', secondaryColorNum: 2, secondaryColor: 'Warm Orange' },
+        6: { mainColor: 'Indigo Purple', mainElement: 'Metal', auxElement: '', secondaryColorNum: 1, secondaryColor: 'Rose Pink' },
+        7: { mainColor: 'Deep Indigo', mainElement: 'Water', auxElement: 'Metal', secondaryColorNum: 0, secondaryColor: 'Silver Light' },
+        8: { mainColor: 'Purple Gold', mainElement: 'Metal', auxElement: 'Earth', secondaryColorNum: 4, secondaryColor: 'Ink Green' },
+        9: { mainColor: 'Champagne Gold', mainElement: 'Fire', auxElement: '', secondaryColorNum: 6, secondaryColor: 'Indigo Light' }
+      };
+
+      // Number Meanings
+      const numberMeanings = {
+        0: 'Infinity, Cycle',
+        1: 'Leadership, Creation, Mastery',
+        2: 'Harmony, Cooperation, Communication',
+        3: 'Creativity, Expression, Sociability',
+        4: 'Stability, Practice, Foundation',
+        5: 'Freedom, Change, Adventure',
+        6: 'Responsibility, Love, Family',
+        7: 'Wisdom, Analysis, Spirituality',
+        8: 'Power, Success, Abundance',
+        9: 'Completion, Wisdom, Compassion'
+      };
+
+      // Zodiac Signs
+      const zodiacSigns = [
+        { name: 'Capricorn', start: [12, 22], end: [1, 19] },
+        { name: 'Aquarius', start: [1, 20], end: [2, 18] },
+        { name: 'Pisces', start: [2, 19], end: [3, 20] },
+        { name: 'Aries', start: [3, 21], end: [4, 19] },
+        { name: 'Taurus', start: [4, 20], end: [5, 20] },
+        { name: 'Gemini', start: [5, 21], end: [6, 20] },
+        { name: 'Cancer', start: [6, 21], end: [7, 22] },
+        { name: 'Leo', start: [7, 23], end: [8, 22] },
+        { name: 'Virgo', start: [8, 23], end: [9, 22] },
+        { name: 'Libra', start: [9, 23], end: [10, 22] },
+        { name: 'Scorpio', start: [10, 23], end: [11, 21] },
+        { name: 'Sagittarius', start: [11, 22], end: [12, 21] }
+      ];
+
+      // Action Suggestions
+      const actionSuggestions = {
+        0: [
+          'Build cyclical habits and find balance and new possibilities in life',
+          'Learn to let go of the past and open your heart to new opportunities',
+          'Practice meditation and spiritual cultivation, connecting to infinite possibilities'
+        ],
+        1: [
+          'Cultivate leadership and take responsibility for creating new directions',
+          'Build self-confidence and trust your judgment and decision-making abilities',
+          'Find opportunities to showcase your talents and become a team leader'
+        ],
+        2: [
+          'Improve communication skills and learn to listen and express yourself',
+          'Develop a cooperative spirit and find harmony and balance in your team',
+          'Cultivate empathy and understand the needs and feelings of others'
+        ],
+        3: [
+          'Express your creativity through art or self-expression',
+          'Build social networks and establish deep connections with like-minded people',
+          'Learn to face life optimistically and inspire others with positive energy'
+        ],
+        4: [
+          'Establish a solid foundation in work and life through practical action',
+          'Develop organizational skills and turn plans into concrete actions',
+          'Cultivate patience and perseverance, trusting that continuous effort brings results'
+        ],
+        5: [
+          'Embrace change and seek new adventures and opportunities in life',
+          'Develop adaptability and learn to stay flexible in uncertainty',
+          'Explore diverse possibilities and don\'t limit yourself to a single path'
+        ],
+        6: [
+          'Cultivate responsibility and exercise the power of care in family and community',
+          'Learn unconditional love and build deep relationships by helping others',
+          'Develop a spirit of service and realize self-worth through helping others'
+        ],
+        7: [
+          'Deepen your wisdom through learning and reflection to enhance self-awareness',
+          'Develop intuition and trust your inner voice and spiritual guidance',
+          'Seek truth and maintain curiosity and desire for knowledge in life'
+        ],
+        8: [
+          'Develop leadership and decision-making abilities to pursue achievement in your career',
+          'Build financial awareness and learn to manage resources and create abundance',
+          'Believe in your power and face challenges with courage'
+        ],
+        9: [
+          'Complete unfinished business and close the chapter on the past',
+          'Develop compassion and wisdom to help others through difficult times',
+          'Seek higher goals and bring positive impact to the world'
+        ]
+      };
+
+      // Five Elements Weight Calculation
+      const STRUCTURE_SCORE_MAP = {
+        0: 0, 1: 2, 2: 3, 3: 4, 4: 2, 5: 5, 6: 4, 7: 3, 8: 2, 9: 4
+      };
+
+      const WUXING_RELATION_SCORE_TABLE = {
+        0: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0 },
+        1: { 0: 0, 1: 2, 2: -1, 3: 1, 4: 1, 5: 3, 6: -1, 7: -1, 8: -1, 9: 2 },
+        2: { 0: 0, 1: -1, 2: 2, 3: 3, 4: 3, 5: -1, 6: 1, 7: 2, 8: 1, 9: -1 },
+        3: { 0: 0, 1: 3, 2: 1, 3: 2, 4: 2, 5: -1, 6: -1, 7: 1, 8: -1, 9: 3 },
+        4: { 0: 0, 1: 3, 2: 1, 3: 2, 4: 2, 5: -1, 6: -1, 7: 1, 8: -1, 9: 3 },
+        5: { 0: 0, 1: 1, 2: -1, 3: -1, 4: -1, 5: 2, 6: 3, 7: -1, 8: 3, 9: 1 },
+        6: { 0: 0, 1: -1, 2: 3, 3: -1, 4: -1, 5: 1, 6: 2, 7: 3, 8: 2, 9: -1 },
+        7: { 0: 0, 1: -1, 2: 2, 3: 3, 4: 3, 5: -1, 6: 1, 7: 2, 8: 1, 9: -1 },
+        8: { 0: 0, 1: -1, 2: 3, 3: -1, 4: -1, 5: 1, 6: 2, 7: 3, 8: 2, 9: -1 },
+        9: { 0: 0, 1: 2, 2: -1, 3: 1, 4: 1, 5: 3, 6: -1, 7: -1, 8: -1, 9: 2 }
+      };
+
+      function sortEnhancementNumbersByWeight(enhancementNumbers, lifePathNumber) {
+        const weights = enhancementNumbers.map(num => {
+          const structureScore = STRUCTURE_SCORE_MAP[num] || 0;
+          const wuxingRelationScore = WUXING_RELATION_SCORE_TABLE[num]?.[lifePathNumber] ?? 0;
+          const hasConflict = wuxingRelationScore < 0;
+          const totalScore = structureScore + wuxingRelationScore;
+          return { num, structureScore, wuxingRelationScore, totalScore, hasConflict };
+        });
+
+        weights.sort((a, b) => {
+          if (b.totalScore !== a.totalScore) return b.totalScore - a.totalScore;
+          if (a.hasConflict !== b.hasConflict) return a.hasConflict ? 1 : -1;
+          if (b.structureScore !== a.structureScore) return b.structureScore - a.structureScore;
+          return a.num - b.num;
+        });
+
+        return weights.map(w => w.num);
+      }
+
+      let currentCalculation = null;
+      let currentPage = 'input';
+
+      // Calculate Birthday Energy
+      function calculateBirthdayEnergy(dateString) {
+        const [year, month, day] = dateString.split('-').map(Number);
+
+        // Calculate Innate Numbers (all digits, including 0, deduplicated)
+        const monthStr = String(month).padStart(2, '0');
+        const dayStr = String(day).padStart(2, '0');
+        const allDigits = `${year}${monthStr}${dayStr}`.split('').map(Number);
+        const innateNumbers = [...new Set(allDigits)].sort((a, b) => a - b);
+
+        // Calculate Talent Numbers (sum of all digits)
+        const talentSum = allDigits.reduce((a, b) => a + b, 0);
+        const talentNumbers = talentSum >= 10 
+          ? [Math.floor(talentSum / 10), talentSum % 10].sort((a, b) => a - b)
+          : [talentSum];
+
+        // Calculate Life Path Number (sum of talent numbers)
+        let lifePathSum = talentNumbers.reduce((a, b) => a + b, 0);
+        let lifePathNumber = lifePathSum;
+        
+        // Special handling for master numbers 11, 22, 33, 44
+        if (lifePathSum === 11) {
+          lifePathSum = 11;
+          lifePathNumber = 1 + 1; // = 2
+        } else if (lifePathSum === 22) {
+          lifePathSum = 22;
+          lifePathNumber = 2 + 2; // = 4
+        } else if (lifePathSum === 33) {
+          lifePathSum = 33;
+          lifePathNumber = 3 + 3; // = 6
+        } else if (lifePathSum === 44) {
+          lifePathSum = 44;
+          lifePathNumber = 4 + 4; // = 8
+        } else if (lifePathSum >= 10) {
+          // For other two-digit numbers, further simplify
+          const tens = Math.floor(lifePathSum / 10);
+          const ones = lifePathSum % 10;
+          lifePathNumber = tens + ones;
+        }
+
+        // Calculate Enhancement Numbers (0-9 not in innate, talent, or life path numbers)
+        const allNumbers = new Set([...innateNumbers, ...talentNumbers, lifePathNumber]);
+        let enhanceNumbers = [];
+        for (let i = 0; i <= 9; i++) {
+          if (!allNumbers.has(i)) {
+            enhanceNumbers.push(i);
+          }
+        }
+        
+        // Sort by five elements weight
+        enhanceNumbers = sortEnhancementNumbersByWeight(enhanceNumbers, lifePathNumber);
+
+        // Calculate Zodiac
+        const zodiac = getZodiac(month, day);
+
+        // Calculate Main and Auxiliary Elements (based on life path number)
+        const lifePathData = numberData[lifePathNumber];
+        const mainElement = lifePathData.mainElement;
+        const auxElement = lifePathData.auxElement;
+
+        return {
+          year, month, day,
+          innateNumbers,
+          talentNumbers,
+          talentSum,
+          lifePathNumber,
+          lifePathSum,
+          enhanceNumbers,
+          zodiac,
+          mainElement,
+          auxElement,
+          allNumbers: Array.from(allNumbers).sort((a, b) => a - b)
+        };
+      }
+
+      // Get Zodiac Sign
+      function getZodiac(month, day) {
+        for (const sign of zodiacSigns) {
+          const [startMonth, startDay] = sign.start;
+          const [endMonth, endDay] = sign.end;
+          
+          if (startMonth === endMonth) {
+            if (month === startMonth && day >= startDay && day <= endDay) {
+              return sign.name;
+            }
+          } else {
+            if ((month === startMonth && day >= startDay) || (month === endMonth && day <= endDay)) {
+              return sign.name;
+            }
+          }
+        }
+        return 'Unknown';
+      }
+
+      // Show Page
+      function showPage(pageName) {
+        document.querySelectorAll('.page, #inputPage').forEach(el => {
+          el.classList.remove('active');
+        });
+        
+        const pageEl = document.getElementById(pageName === 'input' ? 'inputPage' : pageName);
+        if (pageEl) {
+          pageEl.classList.add('active');
+        }
+        
+        currentPage = pageName;
+        window.scrollTo(0, 0);
+      }
+
+      // Render Page 1
+      function renderPage1() {
+        const calc = currentCalculation;
+        
+        // Zodiac
+        document.getElementById('page1-zodiac').textContent = `【${calc.zodiac}】`;
+
+        // Calculation Method
+        const monthStr = String(calc.month).padStart(2, '0');
+        const dayStr = String(calc.day).padStart(2, '0');
+        const yearDigits = String(calc.year).split('');
+        const monthDigits = monthStr.split('');
+        const dayDigits = dayStr.split('');
+        const allDigitsStr = [...yearDigits, ...monthDigits, ...dayDigits].join('+');
+        const calcStr = `${allDigitsStr} = ${calc.talentSum} > ${calc.talentNumbers.join('+')} = ${calc.lifePathSum}`;
+        document.getElementById('page1-calculation').textContent = `Calculation: ${calcStr}`;
+
+        // Life Path Number
+        document.getElementById('page1-lifePathNumber').textContent = calc.lifePathNumber;
+
+        // Main and Auxiliary Elements
+        const elementsHtml = `
+          <div class="element-info">
+            <div class="element-item">
+              <span class="element-label">Main Element:</span>
+              <span class="element-value">${calc.mainElement}</span>
+            </div>
+            <div class="element-item">
+              <span class="element-label">Auxiliary Element:</span>
+              <span class="element-value">${calc.auxElement || 'None'}</span>
+            </div>
+          </div>
+        `;
+        document.getElementById('page1-elements').innerHTML = elementsHtml;
+
+        // Enhancement Numbers (in priority order)
+        const enhanceNumbersHtml = `
+          <div style="margin-bottom: 0.5rem; font-size: 0.875rem; color: #999;">In Enhancement Priority Order</div>
+          ${calc.enhanceNumbers.map(num => 
+            `<div class="list-item"><span class="list-item-number">${num}</span><span class="list-item-text">${numberMeanings[num]}</span></div>`
+          ).join('')}
+        `;
+        document.getElementById('page1-enhanceNumbers').innerHTML = enhanceNumbersHtml;
+
+        // Enhancement Colors (in priority order)
+        const mainColors = calc.enhanceNumbers.map(num => numberData[num].mainColor).join(' > ');
+        const secondaryColors = calc.enhanceNumbers.map(num => numberData[num].secondaryColor).join(' > ');
+        const enhanceColorsHtml = `
+          <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="margin-bottom: 0.5rem; font-size: 0.875rem; color: #999;">In Enhancement Priority Order</div>
+            <div>Main Colors: ${mainColors}</div>
+            <div>Secondary Colors: ${secondaryColors}</div>
+          </div>
+        `;
+        document.getElementById('page1-enhanceColors').innerHTML = enhanceColorsHtml;
+      }
+
+      // Render Luoshu Grid
+      function renderLuoshuGrid() {
+        const calc = currentCalculation;
+        // Luoshu Nine Palace positions: 4-9-2 / 3-5-7 / 8-1-6
+        const luoshuPositions = [4, 9, 2, 3, 5, 7, 8, 1, 6];
+        const gridHtml = luoshuPositions.map(num => {
+          const isShown = calc.allNumbers.includes(num);
+          return `
+            <div class="luoshu-cell ${isShown ? '' : 'empty'}">
+              ${isShown ? num : ''}
+            </div>
+          `;
+        }).join('');
+        document.getElementById('luoshuGrid').innerHTML = gridHtml;
+      }
+
+      // Render Page 3
+      function renderPage3() {
+        const calc = currentCalculation;
+
+        // Innate Numbers
+        const innateHtml = calc.innateNumbers.map(num => 
+          `<div class="list-item"><span class="list-item-number">${num}</span><span class="list-item-text">${numberMeanings[num]}</span></div>`
+        ).join('');
+        document.getElementById('page3-innateNumbers').innerHTML = innateHtml;
+
+        // Talent Numbers
+        const talentHtml = calc.talentNumbers.map(num => 
+          `<div class="list-item"><span class="list-item-number">${num}</span><span class="list-item-text">${numberMeanings[num]}</span></div>`
+        ).join('');
+        document.getElementById('page3-talentNumbers').innerHTML = talentHtml;
+      }
+
+      // Render Page 4
+      function renderPage4() {
+        const calc = currentCalculation;
+        // Sorted Enhancement Numbers by weight
+        const sortedEnhanceNumbers = sortEnhancementNumbersByWeight(calc.enhanceNumbers, calc.lifePathNumber);
+        
+        // Add Priority Order Header
+        const headerHtml = `
+          <div style="margin-bottom: 2rem; padding: 1rem; background-color: #f5f5f5; border-left: 3px solid #999;">
+            <div style="font-weight: bold; color: #434343; margin-bottom: 0.5rem;">Future Development and Optimization Suggestions</div>
+            <div style="color: #666; font-size: 0.875rem; margin-bottom: 0.5rem;">The following numbers represent areas you can develop and strengthen through conscious effort.</div>
+            <div style="color: #999; font-size: 0.875rem;">【Enhancement Priority Order】Recommended by structure weight (Core>Spiritual>Emotional>Material) and Five Elements relationships</div>
+          </div>
+        `;
+        
+        const enhancementsHtml = headerHtml + sortedEnhanceNumbers.map(num => {
+          const data = numberData[num];
+          const secondaryData = data.secondaryColorNum !== null ? numberData[data.secondaryColorNum] : null;
+          
+          return `
+            <div class="enhancement-section">
+              <div class="enhancement-title">Enhancement Number ${num}</div>
+              
+              <div class="color-info">
+                <div class="color-name">Main Enhancement Color: ${data.mainColor}</div>
+                <div class="element-info">
+                  <div class="element-item"><span class="element-label">Main Element:</span><span class="element-value">${data.mainElement}</span></div>
+                  <div class="element-item"><span class="element-label">Auxiliary Element:</span><span class="element-value">${data.auxElement || 'None'}</span></div>
+                </div>
+              </div>
+
+              ${secondaryData ? `
+              <div class="color-info">
+                <div class="color-name">Secondary Enhancement Color: ${data.secondaryColor}</div>
+                <div class="element-info">
+                  <div class="element-item"><span class="element-label">Main Element:</span><span class="element-value">${secondaryData.mainElement || 'None'}</span></div>
+                  <div class="element-item"><span class="element-label">Auxiliary Element:</span><span class="element-value">${secondaryData.auxElement || 'None'}</span></div>
+                </div>
+              </div>
+              ` : ''}
+
+              <div style="margin-top: 1rem;">
+                <div style="font-weight: bold; color: #434343; margin-bottom: 0.5rem;">Action Suggestions</div>
+                <ul class="action-list">
+                  ${actionSuggestions[num].map(suggestion => `<li>${suggestion}</li>`).join('')}
+                </ul>
+              </div>
+            </div>
+          `;
+        }).join('');
+        document.getElementById('page4-enhancements').innerHTML = enhancementsHtml;
+      }
+
+      // Event Listeners
+      document.getElementById('calculateBtn').addEventListener('click', () => {
+        console.log('Calculate button clicked');
+        
+        // Get date from new input fields
+        const year = document.getElementById('yearInput').value;
+        const month = document.getElementById('monthInput').value;
+        const day = document.getElementById('dayInput').value;
+        
+        console.log('Date input:', year, month, day);
+        
+        if (!year || !month || !day) {
+          alert('Please enter your birthday (Year, Month, Day)');
+          return;
+        }
+        
+        // Format as YYYY-MM-DD
+        const dateInput = year + '-' + String(month).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+        console.log('Formatted date:', dateInput);
+        
+        if (!dateInput) {
+          alert('Please enter your birthday');
+          return;
+        }
+
+        try {
+          currentCalculation = calculateBirthdayEnergy(dateInput);
+          console.log('Calculation result:', currentCalculation);
+          renderPage1();
+          console.log('Page 1 rendered');
+          renderLuoshuGrid();
+          console.log('Luoshu grid rendered');
+          renderPage3();
+          console.log('Page 3 rendered');
+          renderPage4();
+          console.log('Page 4 rendered');
+          showPage('page1');
+          console.log('Page 1 shown');
+        } catch (error) {
+          console.error('Error during calculation:', error);
+          alert('Error: ' + error.message);
+        }
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        document.getElementById('yearInput').value = '';
+        document.getElementById('monthInput').value = '';
+        document.getElementById('dayInput').value = '';
+        document.getElementById('dateInput').value = '';
+        currentCalculation = null;
+        showPage('input');
+      });
+
+      // Save Results
+      document.getElementById('page1SaveBtn').addEventListener('click', () => {
+        if (!currentCalculation) {
+          alert('Please calculate your birthday energy first');
+          return;
+        }
+        
+        const calc = currentCalculation;
+        const result = {
+          date: `${calc.year}-${String(calc.month).padStart(2, '0')}-${String(calc.day).padStart(2, '0')}`,
+          zodiac: calc.zodiac,
+          lifePathNumber: calc.lifePathNumber,
+          mainElement: calc.mainElement,
+          auxElement: calc.auxElement,
+          innateNumbers: calc.innateNumbers,
+          talentNumbers: calc.talentNumbers,
+          enhanceNumbers: calc.enhanceNumbers,
+          timestamp: new Date().toLocaleString('en-US')
+        };
+        
+        // Save to local storage
+        let results = JSON.parse(localStorage.getItem('luoshuResults') || '[]');
+        results.push(result);
+        localStorage.setItem('luoshuResults', JSON.stringify(results));
+        
+        alert('Results saved!');
+      });
+
+      // Page Navigation
+      document.getElementById('page1NextBtn').addEventListener('click', () => showPage('page2'));
+      document.getElementById('page2PrevBtn').addEventListener('click', () => showPage('page1'));
+      document.getElementById('page2NextBtn').addEventListener('click', () => showPage('page3'));
+      document.getElementById('page3PrevBtn').addEventListener('click', () => showPage('page2'));
+      document.getElementById('page3NextBtn').addEventListener('click', () => showPage('page4'));
+      document.getElementById('page4PrevBtn').addEventListener('click', () => showPage('page3'));
+      document.getElementById('page4ResetBtn').addEventListener('click', () => {
+        document.getElementById('yearInput').value = '';
+        document.getElementById('monthInput').value = '';
+        document.getElementById('dayInput').value = '';
+        document.getElementById('dateInput').value = '';
+        currentCalculation = null;
+        showPage('input');
+      });
+      });
+    </script>
+  </body>
+</html>
